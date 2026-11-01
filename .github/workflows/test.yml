@@ -21,4 +21,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Unit and hook tests
-        run: node --test test/
+        # No argument: Node discovers *.test.js itself. Passing a directory
+        # (node --test test/) resolves as a module path on some Node versions
+        # and fails with MODULE_NOT_FOUND.
+        run: node --test

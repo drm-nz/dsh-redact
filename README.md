@@ -169,12 +169,17 @@ dsh-redact: active (12 exact-value rule(s), patterns=true, keywords=false)
 ## Tests
 
 ```sh
-node --test test/
+node --test
 ```
+
+Node discovers `test/*.test.js` itself. Pass no path: on some Node versions a
+directory argument is resolved as a module path and fails with `MODULE_NOT_FOUND`.
 
 37 tests covering every declared format, the structural rules, the exact tier's
 longest-first replacement, path-versus-secret classification, and the hook's behaviour
 on string content, block arrays, blocked results, and each tier toggle.
+
+Runs on Node 22 and 24 in CI.
 
 Every fixture in the suite is synthetic: format-valid values built from repeated
 fillers, published vendor documentation examples, and `example`-style hosts. None is,
