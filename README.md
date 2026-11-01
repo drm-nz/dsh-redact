@@ -166,6 +166,29 @@ startup:
 dsh-redact: active (12 exact-value rule(s), patterns=true, keywords=false)
 ```
 
+## Startup self-check
+
+Every boot, the plugin runs its own matcher against a synthetic credential and
+appends one line to `~/.dsh/health.log`:
+
+```
+2026-11-01T02:00:42Z dsh-redact         ok   rules=37 probe=patterns redacted=yes
+```
+
+Read it with:
+
+```sh
+tail -n 2 ~/.dsh/health.log        # both plugins, when both are installed
+grep -v ' ok ' ~/.dsh/health.log   # only problems
+```
+
+The probe goes through the same core the hook uses, so it proves the rule set still
+matches — with no tool call and no cost. It cannot prove the hook itself fired; that
+needs a live tool call. When `patterns` is disabled the probe exercises the `exact`
+tier instead, and reports `probe=off` when no tier is enabled rather than raising a
+false failure. Set `DSH_HEALTH_LOG` to write somewhere else; a diagnostics failure
+never stops the plugin from loading.
+
 ## Tests
 
 ```sh
