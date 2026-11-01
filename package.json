@@ -28,7 +28,9 @@
   },
   "files": [
     "lib",
-    "README.md"
+    "README.md",
+    "cordis.patch.yml",
+    "LICENSE"
   ],
   "scripts": {
     "test": "node --test"
