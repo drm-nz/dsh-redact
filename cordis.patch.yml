@@ -1,6 +1,9 @@
-# dsh-redact bundle patch. The row names the entry relative to this patch file:
-# the package is installed as a link, so its real directory is outside
-# node_modules and a bare package name would not resolve from here.
+# dsh-redact bundle patch. The row names the entry relative to this patch file,
+# which works in every install shape: a link: install (real directory outside
+# node_modules, where a bare name resolves through a mapping that does not
+# exist) and a git or npm install (inside node_modules). It is safe here only
+# because this plugin imports nothing from the Harness; a plugin that does must
+# be named bare, as dsh-model-advanced does.
 - insert:
     - id: dsh-redact
       name: ./lib/index.js
