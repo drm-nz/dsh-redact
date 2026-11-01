@@ -1,6 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { apply, DEFAULTS } from "../lib/index.js";
+
+// apply() runs the boot self-check on every call, and these tests call it
+// repeatedly. Point the probe at a scratch file so a test run never writes into
+// the real ~/.dsh/health.log.
+process.env.DSH_HEALTH_LOG = join(mkdtempSync(join(tmpdir(), "dsh-redact-apply-")), "health.log");
 
 /** Minimal Cordis-like context that captures the post-execute handler. */
 function fakeCtx() {
