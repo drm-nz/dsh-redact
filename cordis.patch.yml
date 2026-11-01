@@ -1,0 +1,6 @@
+# dsh-redact bundle patch. The row names the entry relative to this patch file:
+# the package is installed as a link, so its real directory is outside
+# node_modules and a bare package name would not resolve from here.
+- insert:
+    - id: dsh-redact
+      name: ./lib/index.js

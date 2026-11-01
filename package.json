@@ -1,0 +1,42 @@
+{
+  "name": "dsh-redact",
+  "version": "0.1.0",
+  "description": "Redacts secrets from tool output before it reaches the model or the session log.",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "redaction",
+    "secrets",
+    "security",
+    "transcript"
+  ],
+  "homepage": "https://github.com/drm-nz/dsh-redact#readme",
+  "bugs": {
+    "url": "https://github.com/drm-nz/dsh-redact/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drm-nz/dsh-redact.git"
+  },
+  "author": "drm-nz",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./redact": "./lib/redact.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
