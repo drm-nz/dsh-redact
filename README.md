@@ -158,13 +158,35 @@ is replaced before a shorter one that is a substring of it.
 
 ## Verify it works
 
-Ask the agent to run something that prints a fresh token, then read the session log:
-the value should appear as `[REDACTED:NAME]`. The hook also logs a one-line summary at
-startup:
+Three levels, cheapest first. The first is automatic; the other two cover what it
+cannot reach.
+
+**1. Boot probe — automatic.** Every start writes a line to `~/.dsh/health.log` (see
+[Startup self-check](#startup-self-check)). `ok` means the matcher still redacts.
+
+**2. Hook probe — one tool call.** The boot probe exercises the matcher, not the hook.
+To prove the hook is wired, have the agent print a synthetic credential in a recognised
+format:
+
+```sh
+printf 'hook probe: ghp_%s\n' "$(printf 'a%.0s' {1..36})"
+```
+
+A working install shows:
 
 ```
-dsh-redact: active (12 exact-value rule(s), patterns=true, keywords=false)
+hook probe: [REDACTED:github-token]
 ```
+
+If the raw value comes back instead, the `tools/post-execute` listener did not run:
+check that the plugin is enabled, then restart, since host plugins load at boot.
+
+**3. Session log — the persisted copy.** Whatever the conversation shows, the value
+must also be redacted in the saved session. That is the copy that survives on disk and
+the one this plugin exists for.
+
+The probe value is not a real credential; it is deliberately in the `github-token`
+shape so the pattern tier matches it.
 
 ## Startup self-check
 
@@ -186,8 +208,12 @@ The probe goes through the same core the hook uses, so it proves the rule set st
 matches — with no tool call and no cost. It cannot prove the hook itself fired; that
 needs a live tool call. When `patterns` is disabled the probe exercises the `exact`
 tier instead, and reports `probe=off` when no tier is enabled rather than raising a
-false failure. Set `DSH_HEALTH_LOG` to write somewhere else; a diagnostics failure
-never stops the plugin from loading.
+false failure. Set `DSH_HEALTH_LOG` to write somewhere else; a diagnostics failure never stops the
+plugin from loading.
+
+Verified on a real boot of DeepSeek Harness 0.2.1-rc.5 (macOS desktop profile) on
+2026-11-01. The rule count and the behaviour of both tiers described above are from that
+machine; they are not fixed values.
 
 ## Tests
 
